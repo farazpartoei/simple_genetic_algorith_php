@@ -5,7 +5,7 @@ require_once 'People.php';
 require_once './Algorithm.php';
 
 $initialPopulation=10;
-$binStrSize=40;
+$binStrSize=50;
 $birthRate=0.2; //how many of population are used for offspring
 
 $alg=new Algorithm();
