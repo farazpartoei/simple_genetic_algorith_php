@@ -34,6 +34,11 @@ class People
    }
 
 
+   public function size()
+   {
+       return count($this->members);
+
+   }
    public function dump()
    {
        foreach ($this->members as $member){

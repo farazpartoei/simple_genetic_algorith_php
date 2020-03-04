@@ -4,12 +4,15 @@ require_once 'Chromosome.php';
 require_once 'People.php';
 require_once './Algorithm.php';
 
+$initialPopulation=10;
 $binStrSize=40;
+$birthRate=0.2; //how many of population are used for offspring
+
 $alg=new Algorithm();
-//initialize with 10 people
+//initialize with  people
 
 $people=new People();
-for($i=0;$i<10;$i++){
+for($i=0;$i<$initialPopulation;$i++){
     $ch=new Chromosome();
     $ch->initialize($binStrSize);
     $people->saveChromosome($ch);
@@ -27,16 +30,15 @@ while (!$bestChromosome=$alg->bestMatchFound($people)) {
 
     $i++;
     echo "GENERATION #".$i.PHP_EOL;
-    echo "The first 2 chromosomes are best let's mate\n";
-    echo "mating " . $people->getMembers()[0] . " and " . $people->getMembers()[1] . PHP_EOL;
-    $firstKid=$alg->crossover($people->getMembers()[0],$people->getMembers()[1]);
-    $secondKid=$alg->crossover($people->getMembers()[1],$people->getMembers()[0]);
-
-    $firstKid=$alg->mutation($firstKid);
-    $secondKid=$alg->mutation($secondKid);
-
-    $people->saveChromosome($firstKid);
-    $people->saveChromosome($secondKid);
+    // the best chromosome mates the rest of candidate population
+    $numberOfCandidates=$people->size()*$birthRate;
+    //lets select $numberOfCandidates for mating
+    for($i=1;$i<$numberOfCandidates;$i++){
+        echo "mating " . $people->getMembers()[0] . " and " . $people->getMembers()[$i] . PHP_EOL;
+        $kid=$alg->crossover($people->getMembers()[0],$people->getMembers()[$i]);
+        $kid=$alg->mutation($kid);
+        $people->saveChromosome($kid);
+    }
 
     $people=$people->sort();
     $people->dump();
